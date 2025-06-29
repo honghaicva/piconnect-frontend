@@ -62,3 +62,16 @@ body { font-family: sans-serif; background-color: #f0f2f5; }
 .tip-button:hover {
   background-color: #e4e6eb;
 }
+.login-footer {
+  margin-top: 40px;
+  font-size: 0.8rem;
+}
+
+.login-footer a {
+  color: #65676b;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}

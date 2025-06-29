@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
-
+import { Routes, Route, Link } from 'react-router-dom';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 const socket = io('https://piconnect-server.onrender.com'); 
 
 function App() {
@@ -104,16 +106,35 @@ const handleTip = async (messageToTip) => {
   };
 
   return (
-    <div className="App">
-      {!user ? (
-        <div className="login-container">
-          <h2>Chào mừng đến PiConnect</h2>
-          <p>Mạng xã hội nhắn tin dành riêng cho Pioneers</p>
-          <button className="login-button" onClick={handleAuthenticate}>
-            Đăng nhập với Pi
-          </button>
-        </div>
-      ) : (
+    <Routes>
+        {/* Route cho trang chính */}
+        <Route path="/" element={
+            <div className="App">
+            {!user ? (
+                <div className="login-container">
+                <h2>Chào mừng đến PiConnect</h2>
+                <p>Mạng xã hội nhắn tin dành riêng cho Pioneers</p>
+                <button className="login-button" onClick={handleAuthenticate}>
+                    Đăng nhập với Pi
+                </button>
+                {/* THÊM FOOTER VỚI LINK VÀO ĐÂY */}
+                <div className="login-footer">
+                    <Link to="/terms">Điều khoản Dịch vụ</Link> | <Link to="/privacy">Chính sách Quyền riêng tư</Link>
+                </div>
+                </div>
+            ) : (
+                <div className="chat-container">
+                {/* Giao diện chat của bạn */}
+                </div>
+            )}
+            </div>
+        } />
+
+        {/* Route cho các trang pháp lý */}
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+    </Routes>
+      ) (
         <div className="chat-container">
           {/* --- DÒNG H2 NÀY ĐÃ ĐƯỢC SỬA ĐỔI --- */}
           <h2>
