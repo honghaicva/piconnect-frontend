@@ -42,3 +42,23 @@ body { font-family: sans-serif; background-color: #f0f2f5; }
   font-weight: normal;
   color: #65676b;
 }
+/* Thêm vào cuối file App.css */
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tip-button {
+  background-color: #f0f2f5;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tip-button:hover {
+  background-color: #e4e6eb;
+}
