@@ -1,27 +1,23 @@
-// file: frontend/src/App.js - PHIÊN BẢN SỬA LỖI MÀN HÌNH TRẮNG
+// file: frontend/src/App.js - PHIÊN BẢN HOÀN CHỈNH CÓ NÚT ĐĂNG XUẤT
 
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
-// Kết nối đến Backend trên Render.com
 const socket = io('https://piconnect-server.onrender.com'); 
 
 function App() {
   const [user, setUser] = useState(null); 
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
-  const [sdkReady, setSdkReady] = useState(false); // Thêm state để biết SDK đã sẵn sàng chưa
+  const [sdkReady, setSdkReady] = useState(false);
 
   useEffect(() => {
-    // KIỂM TRA XEM PI SDK CÓ TỒN TẠI KHÔNG TRƯỚC KHI GỌI
     if (window.Pi) {
       window.Pi.init({ version: "2.0", sandbox: true });
-      setSdkReady(true); // Đánh dấu SDK đã sẵn sàng
+      setSdkReady(true);
     } else {
-      // Cung cấp một thông báo dự phòng nếu chạy ngoài Pi Browser
       console.warn("Pi SDK not found. Running in standard browser mode.");
-      // Trong chế độ này, nút đăng nhập sẽ không hoạt động, nhưng app sẽ không bị trắng màn hình.
     }
 
     socket.on('receiveMessage', (data) => {
@@ -34,21 +30,22 @@ function App() {
   }, []);
 
   const handleAuthenticate = async () => {
-    // Chỉ thực hiện đăng nhập nếu SDK đã sẵn sàng
     if (!sdkReady) {
         alert("Vui lòng mở ứng dụng này trong Pi Browser để đăng nhập.");
         return;
     }
-
     try {
       const scopes = ['username', 'payments'];
       const piUser = await window.Pi.authenticate(scopes, () => {});
       setUser(piUser);
-      console.log(`Chào mừng, ${piUser.username}`);
     } catch (err) {
       console.error("Xác thực thất bại:", err);
-      alert("Đăng nhập thất bại. Vui lòng thử lại.");
     }
+  };
+
+  // --- HÀM MỚI ĐƯỢC THÊM VÀO ĐÂY ---
+  const handleLogout = () => {
+    setUser(null); // Đăng xuất bằng cách xóa thông tin người dùng
   };
 
   const sendMessage = (e) => {
@@ -76,12 +73,30 @@ function App() {
         </div>
       ) : (
         <div className="chat-container">
-          <h2>PiConnect Messenger <span className="welcome-user">(Chào, {user.username}!)</span></h2>
+          {/* --- DÒNG H2 NÀY ĐÃ ĐƯỢC SỬA ĐỔI --- */}
+          <h2>
+            PiConnect Messenger 
+            <span className="welcome-user">(Chào, {user.username}!)</span>
+            <button className="logout-button" onClick={handleLogout}>Đăng xuất</button>
+          </h2>
           <div className="chat-window">
-            {/* Nội dung chat */}
+            {chatHistory.map((msg, index) => (
+              <div key={index} className={`message-container ${msg.type}`}>
+                <div className={`message ${msg.type}`}>
+                  {msg.type === 'received' && <p className="message-author">{msg.author}</p>}
+                  <p>{msg.content}</p>
+                </div>
+              </div>
+            ))}
           </div>
           <form className="message-form" onSubmit={sendMessage}>
-            {/* Form gửi tin nhắn */}
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Nhập tin nhắn..."
+            />
+            <button type="submit">Gửi</button>
           </form>
         </div>
       )}
