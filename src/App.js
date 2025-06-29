@@ -18,7 +18,7 @@ const handleTip = async (messageToTip) => {
 
     // Dữ liệu cho thanh toán
     const paymentData = {
-        amount: 0.1, // Số Pi muốn tip
+        amount: 1, // Số Pi muốn tip
         memo: `Tip cho tin nhắn của ${messageToTip.author} trên PiConnect!`, // Ghi chú giao dịch
         metadata: { messageId: messageToTip.id }, // Dữ liệu kèm theo để xử lý trên backend
     };
